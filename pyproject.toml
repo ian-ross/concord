@@ -1,17 +1,24 @@
 [project]
-name = "code"
+name = "concord-root"
 version = "0.1.0"
-description = "Add your description here"
+description = "Concord contrail timeline system"
 readme = "README.md"
-authors = [
-    { name = "Ian Ross", email = "ian@skybluetrades.net" }
-]
 requires-python = ">=3.12"
+authors = [
+    { name = "Ian Ross", email = "iross@mit.edu" }
+]
 dependencies = []
 
-[project.scripts]
-code = "code:main"
+# [tool.uv]
+# package = false
 
-[build-system]
-requires = ["uv_build>=0.12.21,<0.13.0"]
-build-backend = "uv_build"
+[dependency-groups]
+dev = [
+    "pytest>=9.2.0",
+]
+
+[tool.uv.workspace]
+members = ["apps/*", "packages/*"]
+exclude = ["apps/web", "apps/slurm-manager"]
+
+
