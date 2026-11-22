@@ -1,2 +1,1 @@
-# concord
-Contrail lifetime tool
+# Contrail lifetime tool
