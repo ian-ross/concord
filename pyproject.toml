@@ -7,10 +7,6 @@ requires-python = ">=3.12"
 authors = [
     { name = "Ian Ross", email = "iross@mit.edu" }
 ]
-dependencies = []
-
-# [tool.uv]
-# package = false
 
 [dependency-groups]
 dev = [

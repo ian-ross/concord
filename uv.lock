@@ -6,7 +6,12 @@ requires-python = ">=3.12"
 members = [
     "concord-api",
     "concord-base",
+    "concord-builder",
     "concord-root",
+    "concord-services",
+    "concord-storage-api",
+    "concord-storage-common",
+    "concord-storage-local",
 ]
 
 [[package]]
@@ -29,6 +34,11 @@ version = "0.1.0"
 source = { editable = "packages/base" }
 
 [[package]]
+name = "concord-builder"
+version = "0.1.0"
+source = { editable = "packages/builder" }
+
+[[package]]
 name = "concord-root"
 version = "0.1.0"
 source = { virtual = "." }
@@ -42,6 +52,38 @@ dev = [
 
 [package.metadata.requires-dev]
 dev = [{ name = "pytest", specifier = ">=9.2.0" }]
+
+[[package]]
+name = "concord-services"
+version = "0.1.0"
+source = { editable = "packages/services" }
+
+[[package]]
+name = "concord-storage-api"
+version = "0.1.0"
+source = { editable = "packages/storage-api" }
+dependencies = [
+    { name = "concord-storage-common" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "concord-storage-common", editable = "packages/storage-common" }]
+
+[[package]]
+name = "concord-storage-common"
+version = "0.1.0"
+source = { editable = "packages/storage-common" }
+
+[[package]]
+name = "concord-storage-local"
+version = "0.1.0"
+source = { editable = "packages/storage-local" }
+dependencies = [
+    { name = "concord-storage-common" },
+]
+
+[package.metadata]
+requires-dist = [{ name = "concord-storage-common", editable = "packages/storage-common" }]
 
 [[package]]
 name = "iniconfig"
