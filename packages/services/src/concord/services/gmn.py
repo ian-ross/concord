@@ -1,7 +1,10 @@
+# TODO: Rework this as needed for use in Concord.
+
 import json
 import math
 import os
 import re
+from collections.abc import Iterable
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from functools import cached_property
@@ -32,14 +35,14 @@ BASE_URL = 'https://nimbus.physics.uwo.ca/filebrowser/api'
 class _ChunkReader:
     """Expose an iterable of byte chunks through the readinto interface."""
 
-    def __init__(self, chunks):
+    def __init__(self, chunks: Iterable[bytes]):
         self.chunks = iter(chunks)
         self.pending = memoryview(b'')
 
-    def seekable(self):
+    def seekable(self) -> bool:
         return False
 
-    def readinto(self, buffer):
+    def readinto(self, buffer: bytearray) -> int:
         while not self.pending:
             try:
                 self.pending = memoryview(next(self.chunks))
@@ -62,11 +65,11 @@ class Run:
         self.end = datetime.strptime(parts[4] + '_' + parts[5], '%Y%m%d_%H%M%S').replace(tzinfo=UTC)
 
     @property
-    def path(self):
+    def path(self) -> str:
         return f'/{self.station}/{self.run}'
 
     @property
-    def time_label(self):
+    def time_label(self) -> str:
         return f'{self.start.strftime("%Y%m%dT%H%M%SZ")}_{self.end.strftime("%Y%m%dT%H%M%SZ")}'
 
 
@@ -111,13 +114,13 @@ class RunDirectory:
         return self.base_dir / self.run.station / self.run.run
 
     @cached_property
-    def _name_pattern(self):
+    def _name_pattern(self) -> str:
         # e.g., CAC0B1_20261002_022749_to_20261002_130714
         parts = re.split(r'[-_]', self.run.run)
         return rf'{parts[0]}_{parts[1]}[-_]{parts[2]}_to_{parts[4]}[-_]{parts[5]}'
 
     @cached_property
-    def _date_pattern(self):
+    def _date_pattern(self) -> str:
         # e.g., CAC0B1_20261002_022749
         parts = re.split(r'[-_]', self.run.run)
         return rf'{parts[0]}_{parts[1]}[-_]{parts[2]}'
