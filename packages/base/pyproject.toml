@@ -7,6 +7,7 @@ requires-python = ">=3.12"
 authors = [
     { name = "Ian Ross", email = "iross@mit.edu" }
 ]
+dependencies = []
 
 [build-system]
 requires = ["uv_build>=0.13.9,<0.14"]

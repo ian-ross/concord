@@ -1,13 +1,11 @@
-from datetime import datetime, UTC
-import logging
+from logging import Logger
 import os
+from datetime import UTC, datetime
 from pathlib import Path
 
 import httpx
 from httpx_retries import Retry, RetryTransport
 from tqdm import tqdm
-
-logger = logging.getLogger(__name__)
 
 
 # The LAADS API sometimes returns 401 or 404 errors for valid requests, so we
@@ -65,7 +63,7 @@ class Client:
                 filtered.append(n)
         return filtered
 
-    def retrieve_granule(self, outdir: Path, name: str) -> int:
+    def retrieve_granule(self, outdir: Path, name: str, logger: Logger | None = None) -> int:
         """Retrieve granule file from LAADS.
 
         Returns retrieved file size."""
@@ -78,7 +76,8 @@ class Client:
                 response.raise_for_status()
                 total_size = int(response.headers.get('content-length', 0))
 
-                logger.info('Downloading %s (%s)', name, total_size)
+                if logger is not None:
+                    logger.info('Downloading %s (%s)', name, total_size)
                 downloaded = 0
                 with tqdm(total=total_size, unit='B', unit_scale=True,
                         mininterval=5, disable=None) as pb:
@@ -89,8 +88,7 @@ class Client:
                             fp.write(chunk)
 
                 if total_size != 0 and downloaded != total_size:
-                    logger.error('Failed to download %s', name)
-                    raise RuntimeError('VIIRS data download failed')
+                    raise RuntimeError(f'VIIRS data download failed: {name}')
                 return total_size
 
     def _make_request(self, path, **kwargs):

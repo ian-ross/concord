@@ -1,16 +1,16 @@
-from dataclasses import dataclass
-from datetime import datetime, UTC
-from functools import cached_property
 import json
 import math
 import os
-from pathlib import Path
 import re
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from functools import cached_property
+from pathlib import Path
 
 import httpx
-from httpx_retries import Retry, RetryTransport
 import libarchive
 import pyarrow.parquet as pq
+from httpx_retries import Retry, RetryTransport
 
 # Retry logic for GMN downloads.
 
@@ -26,6 +26,8 @@ transport = RetryTransport(retry=retry)
 
 BASE_URL = 'https://nimbus.physics.uwo.ca/filebrowser/api'
 
+
+# QUESTION: Is this reusable anywhere else?
 
 class _ChunkReader:
     """Expose an iterable of byte chunks through the readinto interface."""

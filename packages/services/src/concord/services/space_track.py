@@ -1,7 +1,7 @@
-from datetime import date, datetime, timedelta, UTC
+import sqlite3
+from datetime import UTC, date, datetime, timedelta
 from importlib.resources import files
 from pathlib import Path
-import sqlite3
 
 import httpx
 from pyorbital.orbital import Orbital
@@ -24,7 +24,7 @@ class TLEDatabase:
 
     def download(self, platform: str, start_epoch: date, end_epoch: date):
         """Download TLEs for a given platform and epoch range from
-        Space-Track."""
+        Space-Track and insert into database."""
         with httpx.Client() as client:
             cookies = self._login(client)
             url = self._space_track_url(platform, start_epoch, end_epoch)
@@ -58,6 +58,7 @@ class TLEDatabase:
         return Orbital(platform, line1=lines[0], line2=lines[1])
 
     def _ensure_tables(self):
+        """Ensure that the required tables exist in the database."""
         with self.conn:
             self.conn.execute('PRAGMA foreign_keys = ON')
             self.conn.execute('''
