@@ -1,27 +1,27 @@
 from __future__ import annotations
 
-from collections.abc import Iterable, Mapping, Sequence
-from importlib.resources import files, Anchor
-from importlib.resources.abc import Traversable
 import json
-from pathlib import Path
 import struct
-from typing import Any
 import zipfile
+from collections.abc import Iterable, Mapping, Sequence
+from importlib.resources import Anchor, files
+from importlib.resources.abc import Traversable
+from pathlib import Path
+from typing import Any
 
 import numpy as np
-from rasterio.features import rasterize
-from rasterio.transform import Affine, from_bounds
-from skimage.morphology import dilation
-from skimage.measure import label
 from pyproj import Transformer
 from pyresample.geometry import SwathDefinition
 from pyresample.kd_tree import resample_nearest
+from rasterio.features import rasterize
+from rasterio.transform import Affine, from_bounds
+from skimage.measure import label
+from skimage.morphology import dilation
 
-from ..grid import Grid, Swath, LCC_GRID, LONLAT_CRS
+from concord.grid import LCC_GRID, LONLAT_CRS, Grid, Swath
 
 
-NATURAL_EARTH = files('timelines.assets') / 'static-features' / 'natural-earth-5.0.0'
+NATURAL_EARTH = files('concord.assets') / 'static-features' / 'natural-earth-5.0.0'
 
 
 class StaticFeatures:

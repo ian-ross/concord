@@ -12,8 +12,8 @@ from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
 
-from timelines.apis.space_track import TLEDatabase
-from ..utils import Box
+from concord.services.space_track import TLEDatabase
+from concord.utils import Box
 
 
 DEFAULT_SEARCH_STEP = timedelta(seconds=30)

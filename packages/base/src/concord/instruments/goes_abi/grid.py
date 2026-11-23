@@ -1,7 +1,7 @@
 import xarray as xr
 from pyproj import CRS
 
-import timelines.grid as base_grid
+import concord.grid as base_grid
 
 
 class ABIGrid(base_grid.Grid):

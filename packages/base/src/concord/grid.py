@@ -194,7 +194,7 @@ class Grid(HasCells):
             if not all(v is not None for v in [crs, nx, ny, extent]):
                 raise ValueError(
                     'either area or all of crs, nx, ny, extent '
-                    'required in timelines.Grid'
+                    'required in concord.Grid'
                 )
             self.area = pyresample.geometry.AreaDefinition(
                 name, name, name, crs, nx, ny, extent

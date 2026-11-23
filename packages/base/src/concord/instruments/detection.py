@@ -2,9 +2,9 @@
 
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from importlib.abc import Traversable
-import json
 from pathlib import Path
 
 import numpy as np
@@ -13,7 +13,7 @@ import torch
 from torch import Tensor, nn
 from torch.nn import functional as F
 
-from timelines.bands import BandArray
+from concord.bands import BandArray
 
 
 @dataclass(frozen=True, slots=True)

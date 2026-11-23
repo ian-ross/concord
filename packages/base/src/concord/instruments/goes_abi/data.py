@@ -1,17 +1,16 @@
 from __future__ import annotations
 
+import json
 from dataclasses import dataclass
 from datetime import date, datetime
 from itertools import chain
-import json
 from pathlib import Path
 
 import s3fs
 import xarray as xr
 
-from timelines.bands import BandArray
-
-from .grid import ABIGrid
+from concord.bands import BandArray
+from concord.instruments.goes_abi.grid import ABIGrid
 
 
 @dataclass
