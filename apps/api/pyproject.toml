@@ -24,8 +24,3 @@ build-backend = "uv_build"
 [tool.uv.build-backend]
 module-name = "concord"
 namespace = true
-
-[tool.uv.sources]
-concord-base = { workspace = true }
-concord-api = { workspace = true }
-concord-storage-local = { workspace = true }

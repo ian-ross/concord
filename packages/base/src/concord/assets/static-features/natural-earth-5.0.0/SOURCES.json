@@ -1,0 +1,19 @@
+{
+  "dataset": "Natural Earth",
+  "release": "5.0.0",
+  "scale": "1:10m",
+  "license": "Public Domain",
+  "license_url": "https://www.naturalearthdata.com/about/terms-of-use/",
+  "vectors": [
+    {
+      "name": "coastline",
+      "archive": "ne_10m_coastline.zip",
+      "source_url": "https://naturalearth.s3.amazonaws.com/5.1.2/10m_physical/ne_10m_coastline.zip"
+    },
+    {
+      "name": "north_american_rivers",
+      "archive": "ne_10m_rivers_north_america.zip",
+      "source_url": "https://naturalearth.s3.amazonaws.com/5.1.2/10m_physical/ne_10m_rivers_north_america.zip"
+    }
+  ]
+}
