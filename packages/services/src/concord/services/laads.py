@@ -1,3 +1,5 @@
+from __future__ import annotations
+
 from logging import Logger
 import os
 from datetime import UTC, datetime
@@ -5,7 +7,14 @@ from pathlib import Path
 
 import httpx
 from httpx_retries import Retry, RetryTransport
+from pydantic import BaseModel
 from tqdm import tqdm
+
+
+class Config(BaseModel):
+    """Configuration for the LAADS API client."""
+
+    token: str
 
 
 # The LAADS API sometimes returns 401 or 404 errors for valid requests, so we
@@ -27,6 +36,11 @@ BASE_URL = 'https://ladsweb.modaps.eosdis.nasa.gov/api/v2/'
 
 
 class Client:
+    @classmethod
+    def from_config(cls, config: Config) -> Client:
+        """Create a Client from a Config object."""
+        return cls(config.token)
+
     def __init__(self, token: str):
         # Retrieve API token (required for download endpoints).
         self.token = token

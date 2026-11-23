@@ -68,7 +68,8 @@ def _list_files(dt: date) -> dict[datetime, GOESFiles]:
     def start_time(fname: str) -> datetime:
         """Extract the start time from a GOES filename."""
         parts = fname.split('/')[-1].split('_')
-        return datetime.strptime(parts[3][1:14], '%Y%j%H%M%S')
+        start = next(part for part in parts if part.startswith('s'))
+        return datetime.strptime(start[1:14], '%Y%j%H%M%S')
 
     yday = dt.toordinal() - date(dt.year, 1, 1).toordinal() + 1
 

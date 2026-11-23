@@ -1,17 +1,33 @@
+from __future__ import annotations
+
 import sqlite3
 from datetime import UTC, date, datetime, timedelta
 from importlib.resources import files
 from pathlib import Path
 
 import httpx
+from pydantic import BaseModel
 from pyorbital.orbital import Orbital
 
 
 SPACE_TRACK_BASE_URL = 'https://www.space-track.org'
 
 
+class Config(BaseModel):
+    """Configuration for the TLE database."""
+
+    db_path: Path
+    login: str
+    password: str
+
+
 class TLEDatabase:
     """A database for storing and retrieving TLEs from Space-Track."""
+
+    @classmethod
+    def from_config(cls, config: Config) -> TLEDatabase:
+        """Create a TLEDatabase from a Config object."""
+        return cls(config.db_path, config.login, config.password)
 
     def __init__(self, db_path: Path, login: str, password: str):
         """Initialize the TLE database. Login credentials for Space-Track are

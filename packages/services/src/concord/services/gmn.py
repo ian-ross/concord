@@ -1,5 +1,7 @@
 # TODO: Rework this as needed for use in Concord.
 
+from __future__ import annotations
+
 import json
 import math
 import os
@@ -13,6 +15,7 @@ from pathlib import Path
 import httpx
 import libarchive
 import pyarrow.parquet as pq
+from pydantic import BaseModel
 from httpx_retries import Retry, RetryTransport
 
 # Retry logic for GMN downloads.
@@ -316,7 +319,17 @@ class RunDirectory:
         return result
 
 
+class Config(BaseModel):
+    """Configuration for GMN access."""
+    gmn_token: str
+
+
 class CameraArchive:
+    @classmethod
+    def from_config(cls, config: Config) -> CameraArchive:
+        """Create a CameraArchive from a Config object."""
+        return cls(config.gmn_token)
+
     def __init__(self, token: str):
         self.token = token
 

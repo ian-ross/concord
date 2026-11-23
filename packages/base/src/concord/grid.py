@@ -252,12 +252,12 @@ class Grid(HasCells):
     def rasterio_profile(self, dtype, channels: int) -> dict:
         transform = rasterio.transform.from_bounds(
             *self.area.area_extent,
-            width=self.area.x_size,
-            height=self.area.y_size
+            width=self.area.width,
+            height=self.area.height
         )
         return dict(
             driver='GTiff', dtype=dtype, count=channels,
-            width=self.area.x_size, height=self.area.y_size,
+            width=self.area.width, height=self.area.height,
             crs=self.area.crs, transform=transform
         )
 
@@ -334,7 +334,7 @@ class Grid(HasCells):
 
             with concurrent.futures.ProcessPoolExecutor(max_workers=8) as executor:
                 total_rows = self.area.height
-                rows_per_task = total_rows // (os.cpu_count() or 1)
+                rows_per_task = max(1, total_rows // (os.cpu_count() or 1))
                 row_limits = (
                     list(range(0, total_rows, rows_per_task)) + [total_rows]
                 )

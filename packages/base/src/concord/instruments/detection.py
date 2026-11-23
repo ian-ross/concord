@@ -4,16 +4,15 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass
-from importlib.abc import Traversable
+from importlib.resources.abc import Traversable
 from pathlib import Path
 
 import numpy as np
 import segmentation_models_pytorch as smp
 import torch
+from concord.bands import BandArray
 from torch import Tensor, nn
 from torch.nn import functional as F
-
-from concord.bands import BandArray
 
 
 @dataclass(frozen=True, slots=True)

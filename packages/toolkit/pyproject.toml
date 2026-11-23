@@ -6,6 +6,7 @@ dependencies = [
     "concord-base>=0.1,<0.2",
     "concord-api>=0.1,<0.2",
     "concord-storage-api>=0.1,<0.2",
+    "pydantic>=2.14.4",
 ]
 
 [build-system]

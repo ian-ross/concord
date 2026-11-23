@@ -8,6 +8,9 @@ from appdirs import user_cache_dir
 import numpy as np
 
 
+PROJECT_NAME = 'concord'
+
+
 class Cache:
     def __init__(self, name: str, size_limit: int = 128):
         # Save parameters for this cache: sub-directory name and maximum local
@@ -16,7 +19,7 @@ class Cache:
         self.size_limit = size_limit
 
         # Local (writeable) cache directory.
-        self.local_cache_dir = Path(user_cache_dir('starry-skies')) / name
+        self.local_cache_dir = Path(user_cache_dir(PROJECT_NAME)) / name
 
     def get(self, hashables: list[Hashable], fn: Callable):
         # Build filename from hashable objects.
@@ -48,7 +51,7 @@ class Cache:
 
     @staticmethod
     def purge_all():
-        rmtree(user_cache_dir('mcast'))
+        rmtree(user_cache_dir(PROJECT_NAME), ignore_errors=True)
 
     def _limit_size(self):
         # Manage total cached file size by removing old files until we're
@@ -65,5 +68,5 @@ class Cache:
             files.sort(key=lambda t: t[1], reverse=True)
             while to_remove > 0:
                 entry = files.pop()
-                entry[0].remove()
+                entry[0].unlink()
                 to_remove -= entry[2]
