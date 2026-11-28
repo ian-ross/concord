@@ -1,11 +1,15 @@
 [project]
-name = "concord-builder"
+name = "concord-workflows"
 version = "0.1.0"
-description = "Concord data processing pipeline library"
+description = "Concord data processing workflows library"
 readme = "README.md"
 requires-python = ">=3.12"
 authors = [
     { name = "Ian Ross", email = "iross@mit.edu" }
+]
+dependencies = [
+    "hatchet-sdk>=1.46.0",
+    "pydantic>=2.14.4",
 ]
 
 [build-system]

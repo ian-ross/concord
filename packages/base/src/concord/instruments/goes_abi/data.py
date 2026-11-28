@@ -11,6 +11,7 @@ import xarray as xr
 
 from concord.bands import BandArray
 from concord.instruments.goes_abi.grid import ABIGrid
+from concord.time_range import TimeList
 
 
 @dataclass
@@ -59,18 +60,55 @@ class GOESFiles:
 s3 = s3fs.S3FileSystem(anon=True)
 
 
+@dataclass
+class SceneList:
+    platform: str
+    instrument: str
+    region: str
+    scene_times: TimeList
+
+    def __len__(self):
+        return len(self.scene_times)
+
+    def __iter__(self):
+        for scene_time in self.scene_times:
+            yield scene_time
+
+
+def _goes_scene_start_time(fname: str) -> datetime:
+    """Extract the start time from a GOES filename."""
+    parts = fname.split('/')[-1].split('_')
+    start = next(part for part in parts if part.startswith('s'))
+    return datetime.strptime(start[1:14], '%Y%j%H%M%S')
+
+
+def _list_scenes(platform: str, region: str, dt: date) -> SceneList:
+    yday = dt.toordinal() - date(dt.year, 1, 1).toordinal() + 1
+
+    radc_prefix = f'noaa-goes19/ABI-L1b-RadC/{dt.year}/{yday:03d}'
+    file_prefix = 'OR_ABI-L1b-RadC-M6C11'
+    files = chain.from_iterable(
+        s3.glob(f'{radc_prefix}/{hr:02d}/{file_prefix}*') for hr in range(24)
+    )
+    file_list = list(files)
+    print(sorted(file_list))
+    print(f'Found {len(file_list)} files for {platform} {region} on {dt}')
+    scene_times = [_goes_scene_start_time(f) for f in file_list if f.endswith('.nc')]
+
+    return SceneList(
+        platform=platform,
+        instrument='goes_abi',
+        region=region,
+        scene_times=TimeList(scene_times)
+    )
+
+
 def _list_files(dt: date) -> dict[datetime, GOESFiles]:
     """List GOES data files for the given date.
 
     List files in s3://noaa-goes19/ABI-L1b-RadC/YYYY/DDD/HH for HH in 00, 01,
     ..., 23 and YYYY/DDD for the requested date.
     """
-    def start_time(fname: str) -> datetime:
-        """Extract the start time from a GOES filename."""
-        parts = fname.split('/')[-1].split('_')
-        start = next(part for part in parts if part.startswith('s'))
-        return datetime.strptime(start[1:14], '%Y%j%H%M%S')
-
     yday = dt.toordinal() - date(dt.year, 1, 1).toordinal() + 1
 
     radc = {}
@@ -80,13 +118,13 @@ def _list_files(dt: date) -> dict[datetime, GOESFiles]:
         files = chain.from_iterable(
             s3.glob(f'{radc_prefix}/{hr:02d}/{file_prefix}*') for hr in range(24)
         )
-        radc[ch] = {start_time(f): f for f in files if f.endswith('.nc')}
+        radc[ch] = {_goes_scene_start_time(f): f for f in files if f.endswith('.nc')}
 
     mcmipc_prefix = f'noaa-goes19/ABI-L2-MCMIPC/{dt.year}/{yday:03d}'
     mcmipc_files = chain.from_iterable(
         s3.ls(f'{mcmipc_prefix}/{hr:02d}') for hr in range(24)
     )
-    mcmipc = {start_time(f): f for f in mcmipc_files if f.endswith('.nc')}
+    mcmipc = {_goes_scene_start_time(f): f for f in mcmipc_files if f.endswith('.nc')}
 
     result = {}
     for dt in mcmipc.keys():

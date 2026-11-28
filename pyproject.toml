@@ -29,7 +29,7 @@ torch = [{ index = "pytorch-cu130" }]
 torchvision = [{ index = "pytorch-cu130" }]
 concord-api = { workspace = true }
 concord-base = { workspace = true }
-concord-builder = { workspace = true }
+concord-workflows = { workspace = true }
 concord-services = { workspace = true }
 concord-storage-common = { workspace = true }
 concord-storage-api = { workspace = true }
